@@ -2,7 +2,19 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 
+const morgan = require("morgan");
+
+app.use(morgan("dev"));
+
 app.use(express.json());
+
+app.get("/health", (req, res) => {
+  res.json({
+    status: "OK",
+    service: "ProdCare API",
+    time: new Date()
+  });
+});
 
 // routes
 
@@ -21,6 +33,14 @@ app.use("/api/logs", logRoutes);
 
 const aiRoutes = require("./src/routes/aiRoutes");
 app.use("/api/ai", aiRoutes);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+
+  res.status(500).json({
+    message: "Internal Server Error"
+  });
+});
 
 app.listen(5000, () => {
     console.log("Server running on port 5000");
