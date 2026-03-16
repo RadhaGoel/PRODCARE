@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const app = express();
 
 const morgan = require("morgan");
@@ -7,6 +8,8 @@ const morgan = require("morgan");
 app.use(morgan("dev"));
 
 app.use(express.json());
+
+app.use(cors());
 
 app.get("/health", (req, res) => {
   res.json({
